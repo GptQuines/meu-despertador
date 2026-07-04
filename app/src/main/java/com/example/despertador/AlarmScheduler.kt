@@ -38,6 +38,12 @@ class AlarmScheduler(private val context: Context) {
         }
     }
 
+    fun snooze(alarm: AlarmData) {
+        val snoozeTime = System.currentTimeMillis() + 5 * 60 * 1000
+        val snoozeAlarm = alarm.copy(id = System.currentTimeMillis() + 1)
+        setAlarm(snoozeTime, snoozeAlarm)
+    }
+
     private fun setAlarm(timeInMillis: Long, alarm: AlarmData) {
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("alarm", alarm)

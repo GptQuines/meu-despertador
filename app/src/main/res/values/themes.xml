@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.Despertador" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Despertador.FullScreen" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
 </resources>
