@@ -27,8 +27,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFeature
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -123,7 +123,7 @@ fun TimerScreen() {
                     text = formatTimer(remainingMillis),
                     fontSize = 56.sp,
                     fontWeight = FontWeight.Bold,
-                    fontFeature = FontFeature.TabularNumbers,
+                    textAlign = TextAlign.Center,
                     color = if (isFinished) MaterialTheme.colorScheme.error
                             else MaterialTheme.colorScheme.onSurface
                 )
