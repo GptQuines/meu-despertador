@@ -51,6 +51,7 @@ fun AlarmListScreen(
     viewModel: AlarmViewModel = hiltViewModel()
 ) {
     val alarms by viewModel.alarms.collectAsState()
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     Scaffold(
         topBar = {
@@ -61,7 +62,6 @@ fun AlarmListScreen(
                 )
             )
         },
-        val context = androidx.compose.ui.platform.LocalContext.current
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
