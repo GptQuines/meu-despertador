@@ -6,14 +6,12 @@ import android.content.Intent
 import com.despertador.app.service.AlarmRingingService
 import com.despertador.app.service.AlarmScheduler
 import com.despertador.app.ui.alarmringing.AlarmRingingActivity
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 
-@AndroidEntryPoint
 class AlarmReceiver : BroadcastReceiver() {
-
-    @Inject
-    lateinit var scheduler: AlarmScheduler
 
     override fun onReceive(context: Context, intent: Intent) {
         val alarmId = intent.getLongExtra(AlarmScheduler.EXTRA_ALARM_ID, 0)
