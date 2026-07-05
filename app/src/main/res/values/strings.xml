@@ -1,4 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Despertador</string>
+    <string name="alarm_tab">Despertador</string>
+    <string name="world_clock_tab">Rel\u00f3gio Mundial</string>
+    <string name="stopwatch_tab">Cron\u00f4metro</string>
+    <string name="timer_tab">Temporizador</string>
+    <string name="add_alarm">Adicionar alarme</string>
+    <string name="edit_alarm">Editar alarme</string>
+    <string name="delete_alarm">Excluir alarme</string>
+    <string name="no_alarms">Nenhum alarme</string>
+    <string name="add_first_alarm">Toque em + para adicionar</string>
+    <string name="dismiss">Parar</string>
+    <string name="snooze_btn">Soneca</string>
 </resources>
