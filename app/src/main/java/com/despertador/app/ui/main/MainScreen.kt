@@ -3,10 +3,10 @@
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Alarm
-import androidx.compose.material.icons.filled.Globe
-import androidx.compose.material.icons.filled.HourglassEmpty
-import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -39,10 +39,10 @@ fun MainScreen() {
     val navController = rememberNavController()
 
     val items = listOf(
-        BottomNavItem(Routes.Alarm.route, Routes.Alarm.title, Icons.Default.Alarm),
-        BottomNavItem(Routes.WorldClock.route, Routes.WorldClock.title, Icons.Default.Globe),
-        BottomNavItem(Routes.Stopwatch.route, Routes.Stopwatch.title, Icons.Default.Timer),
-        BottomNavItem(Routes.Timer.route, Routes.Timer.title, Icons.Default.HourglassEmpty)
+        BottomNavItem(Routes.Alarm.route, Routes.Alarm.title, Icons.Default.Notifications),
+        BottomNavItem(Routes.WorldClock.route, Routes.WorldClock.title, Icons.Default.Home),
+        BottomNavItem(Routes.Stopwatch.route, Routes.Stopwatch.title, Icons.Default.PlayArrow),
+        BottomNavItem(Routes.Timer.route, Routes.Timer.title, Icons.Default.Info)
     )
 
     Scaffold(
