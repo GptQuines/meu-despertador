@@ -21,10 +21,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
     lateinit var scheduler: AlarmScheduler
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == Intent.ACTION_BOOT_COMPLETED ||
-            intent.action == Intent.ACTION_QUICKBOOT_POWERON ||
-            intent.action == "com.htc.intent.action.QUICKBOOT_POWERON"
-        ) {
+        if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val alarms = repository.getEnabledAlarmsList()

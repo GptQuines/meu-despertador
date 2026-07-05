@@ -82,7 +82,7 @@ fun AlarmRingingScreen(
                 fontSize = 14.sp,
                 color = Color(0xFF90CAF9),
                 letterSpacing = 4.sp,
-                alpha = alpha
+                modifier = Modifier.alpha(alpha)
             )
 
             Spacer(modifier = Modifier.height(8.dp))

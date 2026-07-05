@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (!checkSelfPermission(Manifest.permission.SCHEDULE_EXACT_ALARM)) {
+            if (!hasPermission(Manifest.permission.SCHEDULE_EXACT_ALARM)) {
                 startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
                     data = android.net.Uri.fromParts("package", packageName, null)
                 })
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun checkSelfPermission(permission: String): Boolean {
+    private fun hasPermission(permission: String): Boolean {
         return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
     }
 

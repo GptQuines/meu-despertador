@@ -61,11 +61,12 @@ fun AlarmListScreen(
                 )
             )
         },
+        val context = androidx.compose.ui.platform.LocalContext.current
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
                     AlarmDetailActivity.newInstance(
-                        androidx.compose.ui.platform.LocalContext.current,
+                        context,
                         alarmId = -1L
                     )
                 }
@@ -110,7 +111,7 @@ fun AlarmListScreen(
                         onDelete = { viewModel.deleteAlarm(alarm) },
                         onClick = {
                             AlarmDetailActivity.newInstance(
-                                androidx.compose.ui.platform.LocalContext.current,
+                                context,
                                 alarm.id
                             )
                         }
