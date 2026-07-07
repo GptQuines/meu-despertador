@@ -32,6 +32,18 @@ class AlarmScheduler @Inject constructor(
         }
     }
 
+    fun scheduleNext(alarm: Alarm) {
+        if (!alarm.isEnabled) return
+        val days = parseDays(alarm.daysOfWeek)
+        if (days.isEmpty()) {
+            scheduleOnce(alarm)
+        } else {
+            days.forEach { day ->
+                scheduleForDay(alarm, day)
+            }
+        }
+    }
+
     private fun scheduleOnce(alarm: Alarm) {
         val calendar = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, alarm.hour)
@@ -42,7 +54,7 @@ class AlarmScheduler @Inject constructor(
                 add(Calendar.DAY_OF_YEAR, 1)
             }
         }
-        setAlarm(calendar.timeInMillis, alarm)
+        setAlarm(calendar.timeInMillis, alarm, alarm.id.toInt())
     }
 
     private fun scheduleForDay(alarm: Alarm, dayOfWeek: Int) {
@@ -56,10 +68,10 @@ class AlarmScheduler @Inject constructor(
                 add(Calendar.WEEK_OF_YEAR, 1)
             }
         }
-        setAlarm(calendar.timeInMillis, alarm)
+        setAlarm(calendar.timeInMillis, alarm, (alarm.id * 10 + dayOfWeek).toInt())
     }
 
-    private fun setAlarm(triggerTime: Long, alarm: Alarm) {
+    private fun setAlarm(triggerTime: Long, alarm: Alarm, requestCode: Int) {
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra(EXTRA_ALARM_ID, alarm.id)
             putExtra(EXTRA_HOUR, alarm.hour)
@@ -75,7 +87,7 @@ class AlarmScheduler @Inject constructor(
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            alarm.id.toInt(),
+            requestCode,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -87,10 +99,20 @@ class AlarmScheduler @Inject constructor(
     }
 
     fun cancel(alarm: Alarm) {
+        // Cancel the one-shot alarm
+        cancelRequest(alarm.id.toInt())
+        // Cancel all day-specific alarms
+        val days = parseDays(alarm.daysOfWeek)
+        days.forEach { day ->
+            cancelRequest((alarm.id * 10 + day).toInt())
+        }
+    }
+
+    private fun cancelRequest(requestCode: Int) {
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            alarm.id.toInt(),
+            requestCode,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )

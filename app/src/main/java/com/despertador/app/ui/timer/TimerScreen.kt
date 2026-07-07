@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -65,34 +67,41 @@ fun TimerScreen() {
                 // Input mode
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     OutlinedTextField(
                         value = hours,
                         onValueChange = { if (it.length <= 2) hours = it.filter { c -> c.isDigit() } },
                         label = { Text("H") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        modifier = Modifier.width(80.dp)
+                        modifier = Modifier.width(72.dp),
+                        singleLine = true,
+                        textStyle = MaterialTheme.typography.headlineMedium.copy(textAlign = TextAlign.Center)
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(":", style = MaterialTheme.typography.headlineLarge, modifier = Modifier.padding(top = 8.dp))
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(":", style = MaterialTheme.typography.headlineLarge)
+                    Spacer(modifier = Modifier.width(4.dp))
                     OutlinedTextField(
                         value = minutes,
                         onValueChange = { if (it.length <= 2) minutes = it.filter { c -> c.isDigit() } },
                         label = { Text("M") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        modifier = Modifier.width(80.dp)
+                        modifier = Modifier.width(72.dp),
+                        singleLine = true,
+                        textStyle = MaterialTheme.typography.headlineMedium.copy(textAlign = TextAlign.Center)
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(":", style = MaterialTheme.typography.headlineLarge, modifier = Modifier.padding(top = 8.dp))
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(":", style = MaterialTheme.typography.headlineLarge)
+                    Spacer(modifier = Modifier.width(4.dp))
                     OutlinedTextField(
                         value = seconds,
                         onValueChange = { if (it.length <= 2) seconds = it.filter { c -> c.isDigit() } },
                         label = { Text("S") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        modifier = Modifier.width(80.dp)
+                        modifier = Modifier.width(72.dp),
+                        singleLine = true,
+                        textStyle = MaterialTheme.typography.headlineMedium.copy(textAlign = TextAlign.Center)
                     )
                 }
 
@@ -111,6 +120,7 @@ fun TimerScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(52.dp),
+                    shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
                     )
@@ -142,27 +152,31 @@ fun TimerScreen() {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     if (isRunning) {
                         Button(
                             onClick = { isRunning = false },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.secondary
                             )
                         ) {
-                            Text("Pausar")
+                            Text("Pausar", fontSize = 16.sp)
                         }
                     } else {
                         Button(
                             onClick = { isRunning = true },
-                            enabled = remainingMillis > 0
+                            enabled = remainingMillis > 0,
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(12.dp)
                         ) {
-                            Text("Continuar")
+                            Text("Continuar", fontSize = 16.sp)
                         }
                     }
 
-                    Button(
+                    OutlinedButton(
                         onClick = {
                             isRunning = false
                             isFinished = false
@@ -170,9 +184,14 @@ fun TimerScreen() {
                             hours = ""
                             minutes = ""
                             seconds = ""
-                        }
+                        },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.error
+                        )
                     ) {
-                        Text("Resetar")
+                        Text("Resetar", fontSize = 16.sp)
                     }
                 }
             }

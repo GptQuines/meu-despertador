@@ -119,12 +119,21 @@ private fun WorldClockCard(tzId: String, cityName: String) {
     val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
     sdf.timeZone = tz
     val timeStr = sdf.format(now)
-    val offsetHours = tz.getOffset(now.time) / 3600000
-    val offsetStr = "UTC"
+    val offsetMs = tz.getOffset(now.time)
+    val offsetHours = offsetMs / 3600000
+    val offsetMinutes = (Math.abs(offsetMs) % 3600000) / 60000
+    val offsetStr = "UTC${if (offsetHours >= 0) "+" else ""}${offsetHours}${if (offsetMinutes > 0) ":" + String.format("%02d", offsetMinutes) else ""}"
+
+    val sdfDate = SimpleDateFormat("dd/MM", Locale.getDefault())
+    sdfDate.timeZone = tz
+    val dateStr = sdfDate.format(now)
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
     ) {
         Row(
             modifier = Modifier
@@ -138,16 +147,23 @@ private fun WorldClockCard(tzId: String, cityName: String) {
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium
                 )
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = offsetStr,
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = dateStr,
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             Text(
                 text = timeStr,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = 36.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }

@@ -142,7 +142,7 @@ fun AlarmRingingScreen(
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                " min",
+                                "$snoozeDuration min",
                                 fontSize = 11.sp
                             )
                         }

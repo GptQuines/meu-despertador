@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -69,32 +71,35 @@ fun StopwatchScreen() {
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
                     onClick = {
                         if (!isRunning) {
                             isRunning = true
                             lastLapTime = elapsedMillis
-                            // Start counting via LaunchedEffect in the composable
                         }
                     },
                     enabled = !isRunning,
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
-                    Text("Iniciar")
+                    Text("Iniciar", fontSize = 14.sp)
                 }
 
                 Button(
                     onClick = { isRunning = false },
                     enabled = isRunning,
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.secondary
                     )
                 ) {
-                    Text("Pausar")
+                    Text("Pausar", fontSize = 14.sp)
                 }
 
                 Button(
@@ -105,20 +110,27 @@ fun StopwatchScreen() {
                             lastLapTime = elapsedMillis
                         }
                     },
-                    enabled = isRunning
+                    enabled = isRunning,
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text("Volta")
+                    Text("Volta", fontSize = 14.sp)
                 }
 
-                Button(
+                OutlinedButton(
                     onClick = {
                         isRunning = false
                         elapsedMillis = 0L
                         laps.clear()
                         lastLapTime = 0L
-                    }
+                    },
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
                 ) {
-                    Text("Resetar")
+                    Text("Resetar", fontSize = 14.sp)
                 }
             }
 
@@ -129,12 +141,24 @@ fun StopwatchScreen() {
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    itemsIndexed(laps.reversed()) { index, lap ->
-                        Text(
-                            text = "Volta : ",
-                            fontSize = 16.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                    itemsIndexed(laps.reversed().withIndex().toList()) { _, (originalIndex, lap) ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Volta ${laps.size - originalIndex}",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = formatTime(lap),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
                 }
             }

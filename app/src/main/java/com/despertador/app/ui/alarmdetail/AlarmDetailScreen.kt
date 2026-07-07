@@ -7,6 +7,7 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,12 +24,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -146,7 +144,7 @@ fun AlarmDetailScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             // Days of week
             Text(
@@ -157,7 +155,7 @@ fun AlarmDetailScreen(
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 val dayInfos = listOf(
                     "Dom" to Calendar.SUNDAY,
@@ -169,24 +167,25 @@ fun AlarmDetailScreen(
                     "S\u00e1b" to Calendar.SATURDAY
                 )
                 dayInfos.forEach { (name, day) ->
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = name,
-                            fontSize = 10.sp,
-                            color = if (day in daysOfWeek)
-                                MaterialTheme.colorScheme.primary
-                            else
-                                MaterialTheme.colorScheme.onSurfaceVariant
+                    FilterChip(
+                        selected = day in daysOfWeek,
+                        onClick = { viewModel.toggleDay(day) },
+                        label = {
+                            Text(
+                                text = name,
+                                fontSize = 11.sp,
+                                fontWeight = if (day in daysOfWeek) FontWeight.Bold else FontWeight.Normal
+                            )
+                        },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
                         )
-                        Checkbox(
-                            checked = day in daysOfWeek,
-                            onCheckedChange = { viewModel.toggleDay(day) }
-                        )
-                    }
+                    )
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             // Ringtone picker
             Card(
@@ -218,75 +217,117 @@ fun AlarmDetailScreen(
                     )
                     Text(
                         text = viewModel.getRingtoneDisplayName(),
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Vibrate
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { viewModel.updateVibrate(!vibrate) },
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Vibra\u00e7\u00e3o",
+                        modifier = Modifier.weight(1f),
+                        fontSize = 16.sp
+                    )
+                    FilterChip(
+                        selected = vibrate,
+                        onClick = { viewModel.updateVibrate(!vibrate) },
+                        label = { Text(if (vibrate) "Ligado" else "Desligado", fontSize = 13.sp) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                        )
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Vibrate
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { viewModel.updateVibrate(!vibrate) }
-                    .padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Vibra\u00e7\u00e3o",
-                    modifier = Modifier.weight(1f)
-                )
-                Checkbox(
-                    checked = vibrate,
-                    onCheckedChange = { viewModel.updateVibrate(it) }
-                )
-            }
-
             // Snooze enabled
-            Row(
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { viewModel.updateSnoozeEnabled(!snoozeEnabled) }
-                    .padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .clickable { viewModel.updateSnoozeEnabled(!snoozeEnabled) },
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                )
             ) {
-                Text(
-                    text = "Soneca",
-                    modifier = Modifier.weight(1f)
-                )
-                Checkbox(
-                    checked = snoozeEnabled,
-                    onCheckedChange = { viewModel.updateSnoozeEnabled(it) }
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Soneca",
+                        modifier = Modifier.weight(1f),
+                        fontSize = 16.sp
+                    )
+                    FilterChip(
+                        selected = snoozeEnabled,
+                        onClick = { viewModel.updateSnoozeEnabled(!snoozeEnabled) },
+                        label = { Text(if (snoozeEnabled) "Ligado" else "Desligado", fontSize = 13.sp) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    )
+                }
             }
 
             if (snoozeEnabled) {
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 // Snooze duration
-                Text(
-                    text = "Dura\u00e7\u00e3o da soneca:  min",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf(5, 10, 15, 20, 30).forEach { d ->
-                        Button(
-                            onClick = { viewModel.updateSnoozeDuration(d) },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = if (snoozeDuration == d)
-                                    MaterialTheme.colorScheme.primary
-                                else
-                                    MaterialTheme.colorScheme.surfaceVariant,
-                                contentColor = if (snoozeDuration == d)
-                                    MaterialTheme.colorScheme.onPrimary
-                                else
-                                    MaterialTheme.colorScheme.onSurface
-                            ),
-                            modifier = Modifier.height(36.dp)
-                        ) {
-                            Text("min", fontSize = 12.sp)
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "Dura\u00e7\u00e3o da soneca: ${snoozeDuration} min",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            listOf(5, 10, 15, 20, 30).forEach { d ->
+                                Button(
+                                    onClick = { viewModel.updateSnoozeDuration(d) },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = if (snoozeDuration == d)
+                                            MaterialTheme.colorScheme.primary
+                                        else
+                                            MaterialTheme.colorScheme.surfaceVariant,
+                                        contentColor = if (snoozeDuration == d)
+                                            MaterialTheme.colorScheme.onPrimary
+                                        else
+                                            MaterialTheme.colorScheme.onSurface
+                                    ),
+                                    modifier = Modifier.height(40.dp),
+                                    shape = RoundedCornerShape(8.dp)
+                                ) {
+                                    Text("${d}min", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                }
+                            }
                         }
                     }
                 }
@@ -294,29 +335,40 @@ fun AlarmDetailScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Max snoozes
-                Text(
-                    text = "M\u00e1ximo de sonecas: ",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    val options = listOf(1 to "1x", 2 to "2x", 3 to "3x", 5 to "5x", 10 to "10x", 99 to "Ilim.")
-                    options.forEach { (count, label) ->
-                        Button(
-                            onClick = { viewModel.updateMaxSnoozes(count) },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = if (maxSnoozes == count)
-                                    MaterialTheme.colorScheme.primary
-                                else
-                                    MaterialTheme.colorScheme.surfaceVariant,
-                                contentColor = if (maxSnoozes == count)
-                                    MaterialTheme.colorScheme.onPrimary
-                                else
-                                    MaterialTheme.colorScheme.onSurface
-                            ),
-                            modifier = Modifier.height(36.dp)
-                        ) {
-                            Text(label, fontSize = 12.sp)
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "M\u00e1ximo de sonecas: ${if (maxSnoozes == 99) "Ilimitado" else "${maxSnoozes}x"}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            val options = listOf(1 to "1x", 2 to "2x", 3 to "3x", 5 to "5x", 10 to "10x", 99 to "Ilim.")
+                            options.forEach { (count, label) ->
+                                Button(
+                                    onClick = { viewModel.updateMaxSnoozes(count) },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = if (maxSnoozes == count)
+                                            MaterialTheme.colorScheme.primary
+                                        else
+                                            MaterialTheme.colorScheme.surfaceVariant,
+                                        contentColor = if (maxSnoozes == count)
+                                            MaterialTheme.colorScheme.onPrimary
+                                        else
+                                            MaterialTheme.colorScheme.onSurface
+                                    ),
+                                    modifier = Modifier.height(40.dp),
+                                    shape = RoundedCornerShape(8.dp)
+                                ) {
+                                    Text(label, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                }
+                            }
                         }
                     }
                 }
@@ -333,9 +385,10 @@ fun AlarmDetailScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp)
+                    .height(52.dp),
+                shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Salvar", fontSize = 16.sp)
+                Text("Salvar", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
 
             Spacer(modifier = Modifier.height(24.dp))
