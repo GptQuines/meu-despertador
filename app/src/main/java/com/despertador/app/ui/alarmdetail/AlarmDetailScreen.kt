@@ -5,10 +5,14 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,7 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import java.util.Calendar
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun AlarmDetailScreen(
     alarmId: Long,
@@ -68,6 +72,16 @@ fun AlarmDetailScreen(
     val snoozeDuration by viewModel.snoozeDuration.collectAsState()
     val maxSnoozes by viewModel.maxSnoozes.collectAsState()
     val ringtoneUri by viewModel.ringtoneUri.collectAsState()
+
+    val ringtoneLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val data = result.data
+        if (data != null && result.resultCode == android.app.Activity.RESULT_OK) {
+            val uri = data.getParcelableExtra<Uri>(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)
+            viewModel.updateRingtoneUri(uri?.toString())
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -153,9 +167,10 @@ fun AlarmDetailScreen(
                 fontWeight = FontWeight.Medium
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Row(
+            FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 val dayInfos = listOf(
                     "Dom" to Calendar.SUNDAY,
@@ -199,7 +214,7 @@ fun AlarmDetailScreen(
                             putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
                             putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
                         }
-                        context.startActivity(intent)
+                        ringtoneLauncher.launch(intent)
                     },
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -216,7 +231,7 @@ fun AlarmDetailScreen(
                         modifier = Modifier.weight(1f)
                     )
                     Text(
-                        text = viewModel.getRingtoneDisplayName(),
+                        text = viewModel.getRingtoneDisplayName(context),
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Medium
                     )
@@ -308,7 +323,10 @@ fun AlarmDetailScreen(
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
                             listOf(5, 10, 15, 20, 30).forEach { d ->
                                 Button(
                                     onClick = { viewModel.updateSnoozeDuration(d) },
@@ -348,7 +366,10 @@ fun AlarmDetailScreen(
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
                             val options = listOf(1 to "1x", 2 to "2x", 3 to "3x", 5 to "5x", 10 to "10x", 99 to "Ilim.")
                             options.forEach { (count, label) ->
                                 Button(

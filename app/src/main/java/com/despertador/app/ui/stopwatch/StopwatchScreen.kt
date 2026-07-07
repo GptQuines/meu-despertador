@@ -2,6 +2,7 @@
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -71,7 +72,7 @@ fun StopwatchScreen() {
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Button(
                     onClick = {
@@ -82,24 +83,26 @@ fun StopwatchScreen() {
                     },
                     enabled = !isRunning,
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(6.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
-                    )
+                    ),
+                    contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
                 ) {
-                    Text("Iniciar", fontSize = 14.sp)
+                    Text("Iniciar", fontSize = 12.sp, maxLines = 1)
                 }
 
                 Button(
                     onClick = { isRunning = false },
                     enabled = isRunning,
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(6.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.secondary
-                    )
+                    ),
+                    contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
                 ) {
-                    Text("Pausar", fontSize = 14.sp)
+                    Text("Pausar", fontSize = 12.sp, maxLines = 1)
                 }
 
                 Button(
@@ -112,9 +115,10 @@ fun StopwatchScreen() {
                     },
                     enabled = isRunning,
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(6.dp),
+                    contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
                 ) {
-                    Text("Volta", fontSize = 14.sp)
+                    Text("Volta", fontSize = 12.sp, maxLines = 1)
                 }
 
                 OutlinedButton(
@@ -125,12 +129,13 @@ fun StopwatchScreen() {
                         lastLapTime = 0L
                     },
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(8.dp),
+                    shape = RoundedCornerShape(6.dp),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = MaterialTheme.colorScheme.error
-                    )
+                    ),
+                    contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
                 ) {
-                    Text("Resetar", fontSize = 14.sp)
+                    Text("Resetar", fontSize = 12.sp, maxLines = 1)
                 }
             }
 

@@ -125,8 +125,19 @@ class AlarmDetailViewModel @Inject constructor(
         return daysOfWeek.split(",").mapNotNull { it.trim().toIntOrNull() }.toSet()
     }
 
-    fun getRingtoneDisplayName(): String {
-        val uri = _ringtoneUri.value ?: return "Toque padr\u00e3o"
+    fun getRingtoneDisplayName(context: android.content.Context? = null): String {
+        val uriStr = _ringtoneUri.value ?: return "Toque padr\u00e3o"
+        if (context != null) {
+            try {
+                val uri = android.net.Uri.parse(uriStr)
+                val ringtone = android.media.RingtoneManager.getRingtone(context, uri)
+                if (ringtone != null) {
+                    val title = ringtone.getTitle(context)
+                    ringtone.stop()
+                    return title ?: "Toque personalizado"
+                }
+            } catch (_: Exception) { }
+        }
         return "Toque personalizado"
     }
 }
